@@ -7,15 +7,14 @@ const router = express.Router();
 // Import Employee model
 const Employee = require('../models/employee.model');
 
-// Get all employees from database
+// Get all employees from database with department data
 router.get('/employees', async (req, res) => {
 	try {
-		res.json(await Employee.find());
+		res.json(await Employee.find().populate('department'));
 	} catch (err) {
 		res.status(500).json({ message: err });
 	}
 });
-
 // Get random employee from database
 router.get('/employees/random', async (req, res) => {
 	try {
@@ -29,10 +28,10 @@ router.get('/employees/random', async (req, res) => {
 	}
 });
 
-// Get one employee by id
+/// Get one employee by id with department data
 router.get('/employees/:id', async (req, res) => {
 	try {
-		const emp = await Employee.findById(req.params.id);
+		const emp = await Employee.findById(req.params.id).populate('department');
 		if (!emp) res.status(404).json({ message: 'Not found' });
 		else res.json(emp);
 	} catch (err) {
